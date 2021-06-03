@@ -7,6 +7,8 @@ void PhysicsBall (int* x, int* y, int* vx, int* vy, int ax, int ay, int dt);
 void ControlBall1 (int* vx, int* vy);
 void ControlBall2 (int* vx, int* vy);
 
+const int rBall = 20;
+
 int main()
     {
     txCreateWindow (800, 600);
@@ -18,13 +20,13 @@ int main()
 
 void MoveBall()
     {
-    int x1  = 0, y1  = 0,
-        vx1 = 5, vy1 = 3,
-        ax1 = 0, ay1 = 0;
+    int x1  = 30, y1  = 30,
+        vx1 =  5, vy1 =  3,
+        ax1 =  0, ay1 =  0;
 
     int x2  = 100, y2  = 100,
-        vx2 = 3,   vy2 = 5,
-        ax2 = 0,   ay2 = 0;
+        vx2 =   3, vy2 =   5,
+        ax2 =   0, ay2 =   0;
 
     int dt = 1;
 
@@ -42,7 +44,6 @@ void MoveBall()
         }
     }
 
-
 //-----------------------------------------------------------------------------
 
 void DrawBall (int x, int y, int vx, int vy, COLORREF color, COLORREF fillcolor)
@@ -50,11 +51,10 @@ void DrawBall (int x, int y, int vx, int vy, COLORREF color, COLORREF fillcolor)
     txSetColor (color, 2);
     txSetFillColor (fillcolor);
 
-    txCircle (x, y, 20);
+    txCircle (x, y, rBall);
     txLine (x, y, x + vx * 5, y + vy * 5);
     txCircle (x + vx * 5, y + vy * 5, 3);
     //Flowers (x, y, TX_YELLOW, TX_RED);
-
     }
 
 //-----------------------------------------------------------------------------
@@ -67,28 +67,28 @@ void PhysicsBall (int* x, int* y, int* vx, int* vy, int ax, int ay, int dt)
     *x = *x + *vx * dt;
     *y = *y + *vy * dt;
 
-    if (*x > 800)
+    if ((*x + rBall) > 800)
         {
         *vx = - (*vx);
-        *x = 800;
+        *x = 1600 - 2 * rBall - *x;
         }
 
-    if (*y > 600)
+    if ((*y + rBall) > 600)
         {
         *vy = - (*vy);
-        *y = 600;
+        *y = 1200 - 2 * rBall - *y;
         }
 
-    if (*x < 0)
+    if ((*x - rBall) < 0)
         {
         *vx = - (*vx);
-        *x = 0;
+        *x = 2 * rBall - *x;
         }
 
-    if (*y < 0)
+    if ((*y - rBall) < 0)
         {
         *vy = - (*vy);
-        *y = 0;
+        *y = 2 * rBall - *y;
         }
     }
 
@@ -102,7 +102,6 @@ void ControlBall1 (int* vx, int* vy)
     if (txGetAsyncKeyState (VK_DOWN))  (*vy) ++;
 
     if (txGetAsyncKeyState (VK_SPACE)) *vx = *vy = 0;
-
     }
 
 //-----------------------------------------------------------------------------
@@ -115,5 +114,4 @@ void ControlBall2 (int* vx, int* vy)
     if (txGetAsyncKeyState ('S')) (*vy) ++;
 
     if (txGetAsyncKeyState ('Z')) *vx = *vy = 0;
-
     }
