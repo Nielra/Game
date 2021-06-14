@@ -1,16 +1,24 @@
 #include "TXLib.h"
 //#include "..\proba_lib\Pugovkina_Lib.h"
 
+struct Ball
+    {
+    int x,  y,
+        vx, vy;
+
+    int rBall;
+
+    COLORREF color, fillcolor;
+    };
+
 void MoveBall();
-void DrawBall (int x, int y, int rBall, int vx, int vy, COLORREF color, COLORREF fillcolor);
-void PhysicsBall (int* x, int* y, int* rBall, int* vx, int* vy, int ax, int ay, int dt);
-void ControlBall1 (int* vx, int* vy);
+void DrawBall (Ball);
+void PhysicsBall (Ball*, int ax, int ay, int dt);
+void ControlBall1 (Ball*);
 void ControlBall2 (int* vx, int* vy);
 void Scatter_Balls (int* x, int* y, int* vx, int* vy);
 
 double DistanceBalls (int xA, int yA, int xB, int yB);
-
-//const int rBall = 20;
 
 int main()
     {
@@ -21,19 +29,20 @@ int main()
     return 0;
     }
 
+//-----------------------------------------------------------------------------
+
 void MoveBall()
     {
-    int x1  = 30, y1  = 30,
-        vx1 =  5, vy1 =  3,
-        ax1 =  0, ay1 =  0;
+    Ball ball1 = { .x =  30, .y =  30, .vx = 5, .vy = 3, .rBall = 100,
+                   .color = TX_LIGHTRED, .fillcolor = TX_RED};
 
-    int x2  = 100, y2  = 100,
-        vx2 =   3, vy2 =   5,
-        ax2 =   0, ay2 =   0;
+    Ball ball2 = { .x = 100, .y = 100, .vx = 3, .vy = 5, .rBall =  20,
+                   .color = TX_LIGHTGREEN, .fillcolor = TX_GREEN};
+
+    int ax1 = 0, ay1 = 0,
+        ax2 = 0, ay2 = 0;
 
     int dt = 1;
-
-    int rBall1 = 100, rBall2 = 20;
 
     while (!txGetAsyncKeyState (VK_ESCAPE))
         {
@@ -41,26 +50,27 @@ void MoveBall()
         txSetFillColor (TX_BLACK);
         txClear();
 
-        DrawBall (x1, y1, rBall1, vx1, vy1, TX_LIGHTRED, TX_RED);
-        PhysicsBall (&x1, &y1, &rBall1, &vx1, &vy1, ax1, ay1, dt);
-        ControlBall1 (&vx1, &vy1);
+        DrawBall (ball1);
+        DrawBall (ball2);
 
-        DrawBall (x2, y2, rBall2, vx2, vy2, TX_LIGHTGREEN, TX_GREEN);
-        PhysicsBall (&x2, &y2, &rBall2, &vx2, &vy2, ax2, ay2, dt);
-        ControlBall2 (&vx2, &vy2);
+        PhysicsBall (&ball1, ax1, ay1, dt);
+        PhysicsBall (&ball2, ax2, ay2, dt);
 
-        if (DistanceBalls (x1, y1, x2, y2) <= rBall1 + rBall2)
+        ControlBall1 (&ball1);
+        //ControlBall2 (&vx2, &vy2);
+
+        if (DistanceBalls (ball1.x, ball1.y, ball2.x, ball2.y) <= ball1.rBall + ball2.rBall)
             {
             // oldX1 = x1 - vx1 * dt;
             // oldY1 = y1 - vy1 * dt;
             // oldX2 = x2 - vx2 * dt;
             // oldY2 = y2 - vy2 * dt;
             //while ((DistanceBalls (x1, y1, x2, y2) != rBall1 + rBall2) or (dt > 0.01))
-                    {
-                    int oldX =
-                    }
-            Scatter_Balls (&x1, &y1, &vx1, &vy1);
-            Scatter_Balls (&x2, &y2, &vx2, &vy2);
+            //        {
+            //        int oldX =
+            //        }
+            Scatter_Balls (&ball1.x, &ball1.y, &ball1.vx, &ball1.vy);
+            Scatter_Balls (&ball2.x, &ball2.y, &ball2.vx, &ball2.vy);
             }
 
         txSleep (10);
@@ -69,12 +79,12 @@ void MoveBall()
 
 //-----------------------------------------------------------------------------
 
-void DrawBall (int x, int y, int rBall, int vx, int vy, COLORREF color, COLORREF fillcolor)
+void DrawBall (Ball ball)
     {
-    txSetColor (color, 2);
-    txSetFillColor (fillcolor);
+    txSetColor (ball.color, 2);
+    txSetFillColor (ball.fillcolor);
 
-    txCircle (x, y, rBall);
+    txCircle (ball.x, ball.y, ball.rBall);
     //txLine (x, y, x + vx * 5, y + vy * 5);
     //txCircle (x + vx * 5, y + vy * 5, 3);
     //Flowers (x, y, TX_YELLOW, TX_RED);
@@ -82,49 +92,49 @@ void DrawBall (int x, int y, int rBall, int vx, int vy, COLORREF color, COLORREF
 
 //-----------------------------------------------------------------------------
 
-void PhysicsBall (int* x, int* y, int* rBall, int* vx, int* vy, int ax, int ay, int dt)
+void PhysicsBall (Ball* ball, int ax, int ay, int dt)
     {
-    *vx = *vx + ax * dt;
-    *vy = *vy + ay * dt;
+    ball -> vx = ball -> vx + ax * dt;
+    ball -> vy = ball -> vy + ay * dt;
 
-    *x = *x + *vx * dt;
-    *y = *y + *vy * dt;
+    ball -> x = ball -> x + ball -> vx * dt;
+    ball -> y = ball -> y + ball -> vy * dt;
 
-    if ((*x + (*rBall)) > 800)
+    if ((ball -> x + ball -> rBall) > 800)
         {
-        *vx = - (*vx);
-        *x = 1600 - 2 * (*rBall) - *x;
+        ball -> vx = - (ball -> vx);
+        ball -> x = 1600 - 2 * ball -> rBall - ball -> x;
         }
 
-    if ((*y + (*rBall)) > 600)
+    if ((ball -> y + ball -> rBall) > 600)
         {
-        *vy = - (*vy);
-        *y = 1200 - 2 * (*rBall) - *y;
+        ball -> vy = - (ball -> vy);
+        ball -> y = 1200 - 2 * (ball -> rBall) - ball -> y;
         }
 
-    if ((*x - (*rBall)) < 0)
+    if ((ball -> x - ball -> rBall) < 0)
         {
-        *vx = - (*vx);
-        *x = 2 * (*rBall) - *x;
+        ball -> vx = - (ball -> vx);
+        ball -> x = 2 * ball -> rBall - ball -> x;
         }
 
-    if ((*y - (*rBall)) < 0)
+    if (((ball -> y) - (ball -> rBall)) < 0)
         {
-        *vy = - (*vy);
-        *y = 2 * (*rBall) - *y;
+        ball -> vy = - (ball -> vy);
+        ball -> y = 2 * ball -> rBall - (ball -> y);
         }
     }
 
 //-----------------------------------------------------------------------------
 
-void ControlBall1 (int* vx, int* vy)
+void ControlBall1 (Ball* ball)
     {
-    if (txGetAsyncKeyState (VK_RIGHT)) (*vx) =  abs (*vx);
-    if (txGetAsyncKeyState (VK_LEFT))  (*vx) = -abs (*vx);
-    if (txGetAsyncKeyState (VK_UP))    (*vy) = -abs (*vy);
-    if (txGetAsyncKeyState (VK_DOWN))  (*vy) =  abs (*vy);
+    if (txGetAsyncKeyState (VK_RIGHT)) (ball -> vx) =  abs (ball -> vx);
+    if (txGetAsyncKeyState (VK_LEFT))  (ball -> vx) = -abs (ball -> vx);
+    if (txGetAsyncKeyState (VK_UP))    (ball -> vy) = -abs (ball -> vy);
+    if (txGetAsyncKeyState (VK_DOWN))  (ball -> vy) =  abs (ball -> vy);
 
-    if (txGetAsyncKeyState (VK_SPACE)) *vx = *vy = 0;
+    if (txGetAsyncKeyState (VK_SPACE)) ball -> vx = ball -> vy = 0;
     }
 
 //-----------------------------------------------------------------------------
