@@ -9,11 +9,15 @@ struct Ball
     int rBall;
 
     COLORREF color, fillcolor;
+
+    void Draw();
+
+    void Physics (int ax, int ay, int dt);
+
+    void Change ();
     };
 
 void MoveBall();
-void DrawBall (Ball);
-void PhysicsBall (Ball*, int ax, int ay, int dt);
 void ControlBall1 (Ball*);
 void ControlBall2 (int* vx, int* vy);
 void Scatter_Balls (int* x, int* y, int* vx, int* vy);
@@ -33,16 +37,18 @@ int main()
 
 void MoveBall()
     {
-    Ball ball1 = { .x =  30, .y =  30, .vx = 5, .vy = 3, .rBall = 100,
+    Ball ball1 = { .x =  30, .y =  30, .vx = 5, .vy = 3, .rBall = 50,
                    .color = TX_LIGHTRED, .fillcolor = TX_RED};
 
-    Ball ball2 = { .x = 100, .y = 100, .vx = 3, .vy = 5, .rBall =  20,
+    Ball ball2 = { .x = 400, .y = 400, .vx = 3, .vy = 5, .rBall = 50,
                    .color = TX_LIGHTGREEN, .fillcolor = TX_GREEN};
 
     int ax1 = 0, ay1 = 0,
         ax2 = 0, ay2 = 0;
 
-    int dt = 1;
+    double dt = 1;
+
+    int kolUdarov = 0;
 
     while (!txGetAsyncKeyState (VK_ESCAPE))
         {
@@ -50,27 +56,60 @@ void MoveBall()
         txSetFillColor (TX_BLACK);
         txClear();
 
-        DrawBall (ball1);
-        DrawBall (ball2);
+        ball1.Draw();
+        ball2.Draw();
 
-        PhysicsBall (&ball1, ax1, ay1, dt);
-        PhysicsBall (&ball2, ax2, ay2, dt);
+        ball1.Physics (ax1, ay1, dt);
+        ball2.Physics (ax2, ay2, dt);
 
         ControlBall1 (&ball1);
         //ControlBall2 (&vx2, &vy2);
 
         if (DistanceBalls (ball1.x, ball1.y, ball2.x, ball2.y) <= ball1.rBall + ball2.rBall)
             {
-            // oldX1 = x1 - vx1 * dt;
-            // oldY1 = y1 - vy1 * dt;
-            // oldX2 = x2 - vx2 * dt;
-            // oldY2 = y2 - vy2 * dt;
-            //while ((DistanceBalls (x1, y1, x2, y2) != rBall1 + rBall2) or (dt > 0.01))
-            //        {
-            //        int oldX =
-            //        }
+            kolUdarov += 1;
+
+            /*ball1.x = ball1.x - ball1.vx * dt;  //возврат к старым значениям
+            ball1.y = ball1.y - ball1.vy * dt;
+            ball2.x = ball2.x - ball2.vx * dt;
+            ball2.y = ball2.y - ball2.vy * dt;
+
+            //while ((DistanceBalls (ball1.x, ball1.y, ball2.x, ball2.y) != ball1.rBall + ball2.rBall) or (dt > 0.01))
+            do
+                {
+                dt = dt * 0.5;
+
+                ball1.x = ball1.x + ball1.vx * dt;  printf ("x1 = %d \n",ball1.x);
+                ball1.y = ball1.y + ball1.vy * dt;  printf ("y1 = %d \n",ball1.y);
+                ball2.x = ball2.x + ball2.vx * dt;  printf ("x2 = %d \n",ball2.x);
+                ball2.y = ball2.y + ball2.vy * dt;  printf ("y2 = %d \n",ball2.y);
+
+                if (DistanceBalls (ball1.x, ball1.y, ball2.x, ball2.y) > ball1.rBall + ball2.rBall)
+                    {
+                    ball1.x = ball1.x + ball1.vx * dt;  printf ("x1 in if = %d \n", ball1.x);
+                    ball1.y = ball1.y + ball1.vy * dt;  printf ("y1 in if = %d \n", ball1.y);
+                    ball2.x = ball2.x + ball2.vx * dt;  printf ("x2 in if = %d \n", ball2.x);
+                    ball2.y = ball2.y + ball2.vy * dt;  printf ("y2 in if = %d \n", ball2.y);
+                    }
+                }
+                while ((DistanceBalls (ball1.x, ball1.y, ball2.x, ball2.y) == ball1.rBall + ball2.rBall) or (dt < 0.01));
+
+
+            dt = 1; */
+
             Scatter_Balls (&ball1.x, &ball1.y, &ball1.vx, &ball1.vy);
             Scatter_Balls (&ball2.x, &ball2.y, &ball2.vx, &ball2.vy);
+
+            printf ("Kol-vo udarov = %d \n", kolUdarov);
+
+            //ball1.Physics (ax1, ay1, dt);
+            //ball2.Physics (ax2, ay2, dt);
+
+            //ball1.Draw();
+            //ball2.Draw();
+
+            ball2.Change();
+            printf ("radius = %d \n", ball2.rBall);
             }
 
         txSleep (10);
@@ -79,12 +118,12 @@ void MoveBall()
 
 //-----------------------------------------------------------------------------
 
-void DrawBall (Ball ball)
+void Ball::Draw()
     {
-    txSetColor (ball.color, 2);
-    txSetFillColor (ball.fillcolor);
+    txSetColor (color, 2);
+    txSetFillColor (fillcolor);
 
-    txCircle (ball.x, ball.y, ball.rBall);
+    txCircle (x, y, rBall);
     //txLine (x, y, x + vx * 5, y + vy * 5);
     //txCircle (x + vx * 5, y + vy * 5, 3);
     //Flowers (x, y, TX_YELLOW, TX_RED);
@@ -92,36 +131,36 @@ void DrawBall (Ball ball)
 
 //-----------------------------------------------------------------------------
 
-void PhysicsBall (Ball* ball, int ax, int ay, int dt)
+void Ball::Physics (int ax, int ay, int dt)
     {
-    ball -> vx = ball -> vx + ax * dt;
-    ball -> vy = ball -> vy + ay * dt;
+    vx = vx + ax * dt;
+    vy = vy + ay * dt;
 
-    ball -> x = ball -> x + ball -> vx * dt;
-    ball -> y = ball -> y + ball -> vy * dt;
+    x = x + vx * dt;
+    y = y + vy * dt;
 
-    if ((ball -> x + ball -> rBall) > 800)
+    if ((x + rBall) > 800)
         {
-        ball -> vx = - (ball -> vx);
-        ball -> x = 1600 - 2 * ball -> rBall - ball -> x;
+        vx = -vx;
+        x = 1600 - 2 * rBall - x;
         }
 
-    if ((ball -> y + ball -> rBall) > 600)
+    if ((y + rBall) > 600)
         {
-        ball -> vy = - (ball -> vy);
-        ball -> y = 1200 - 2 * (ball -> rBall) - ball -> y;
+        vy = -vy;
+        y = 1200 - 2 * rBall - y;
         }
 
-    if ((ball -> x - ball -> rBall) < 0)
+    if ((x - rBall) < 0)
         {
-        ball -> vx = - (ball -> vx);
-        ball -> x = 2 * ball -> rBall - ball -> x;
+        vx = -vx;
+        x = 2 * rBall - x;
         }
 
-    if (((ball -> y) - (ball -> rBall)) < 0)
+    if ((y - rBall) < 0)
         {
-        ball -> vy = - (ball -> vy);
-        ball -> y = 2 * ball -> rBall - (ball -> y);
+        vy = -vy;
+        y = 2 * rBall - y;
         }
     }
 
@@ -162,4 +201,12 @@ double DistanceBalls (int xA, int yA, int xB, int yB)
 void Scatter_Balls (int* x, int* y, int* vx, int* vy)
     {
     *vx = - (*vx);
+    *vy = - (*vy);
+    }
+
+//-----------------------------------------------------------------------------
+
+void Ball::Change ()
+    {
+    rBall = rBall - 5;
     }
