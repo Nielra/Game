@@ -18,15 +18,16 @@ struct Ball
     };
 
 void MoveBall();
-void ControlBall1 (Ball*);
-void ControlBall2 (int* vx, int* vy);
+void ControlBall1  (Ball*);
+void ControlBall2  (int* vx, int* vy);
 void Scatter_Balls (int* x, int* y, int* vx, int* vy);
+void Goal          (int* x, int* y, int* kolGoal);
 
 double DistanceBalls (int xA, int yA, int xB, int yB);
 
 int main()
     {
-    txCreateWindow (800, 600);
+    txCreateWindow (800, 650);
 
     MoveBall();
 
@@ -37,11 +38,14 @@ int main()
 
 void MoveBall()
     {
+    HDC vorota   = txLoadImage ("Goal.bmp");
+    HDC numbers  = txLoadImage ("Numbers.bmp");
+
     Ball ball1 = { .x =  30, .y =  30, .vx = 5, .vy = 3, .rBall = 50,
                    .color = TX_LIGHTRED, .fillcolor = TX_RED};
 
     Ball ball2 = { .x = 400, .y = 400, .vx = 3, .vy = 5, .rBall = 50,
-                   .color = TX_LIGHTGREEN, .fillcolor = TX_GREEN};
+                   .color = TX_LIGHTBLUE, .fillcolor = TX_BLUE};
 
     int ax1 = 0, ay1 = 0,
         ax2 = 0, ay2 = 0;
@@ -50,11 +54,27 @@ void MoveBall()
 
     int kolUdarov = 0;
 
+    int kolGoal = 0;
+
     while (!txGetAsyncKeyState (VK_ESCAPE))
         {
         //txSetColor (TX_BLACK);
-        txSetFillColor (TX_BLACK);
+        txSetFillColor (TX_GREEN);
         txClear();
+
+        txSetColor (TX_WHITE);
+        txSetFillColor(TX_WHITE);
+        txRectangle (0, 600, 800, 650);
+
+        txSetColor (TX_GREEN);
+        txSetFillColor (TX_GREEN);
+        txSelectFont ("Arial", 50, 0, FW_BOLD);
+        txTextOut (  0, 600, "Attempts");
+        txTextOut (600, 600, "Goals");
+
+        txTransparentBlt (txDC(), 252, 0,    0,  0, vorota,  0,                     0, TX_WHITE);
+        txTransparentBlt (txDC(), 200, 600, 20, 40, numbers, 40 * (10 - kolUdarov), 0, TX_WHITE);
+        txTransparentBlt (txDC(), 730, 600, 20, 40, numbers, 40 * kolGoal,          0, TX_WHITE);
 
         ball1.Draw();
         ball2.Draw();
@@ -69,51 +89,22 @@ void MoveBall()
             {
             kolUdarov += 1;
 
-            /*ball1.x = ball1.x - ball1.vx * dt;  //возврат к старым значениям
-            ball1.y = ball1.y - ball1.vy * dt;
-            ball2.x = ball2.x - ball2.vx * dt;
-            ball2.y = ball2.y - ball2.vy * dt;
-
-            //while ((DistanceBalls (ball1.x, ball1.y, ball2.x, ball2.y) != ball1.rBall + ball2.rBall) or (dt > 0.01))
-            do
-                {
-                dt = dt * 0.5;
-
-                ball1.x = ball1.x + ball1.vx * dt;  printf ("x1 = %d \n",ball1.x);
-                ball1.y = ball1.y + ball1.vy * dt;  printf ("y1 = %d \n",ball1.y);
-                ball2.x = ball2.x + ball2.vx * dt;  printf ("x2 = %d \n",ball2.x);
-                ball2.y = ball2.y + ball2.vy * dt;  printf ("y2 = %d \n",ball2.y);
-
-                if (DistanceBalls (ball1.x, ball1.y, ball2.x, ball2.y) > ball1.rBall + ball2.rBall)
-                    {
-                    ball1.x = ball1.x + ball1.vx * dt;  printf ("x1 in if = %d \n", ball1.x);
-                    ball1.y = ball1.y + ball1.vy * dt;  printf ("y1 in if = %d \n", ball1.y);
-                    ball2.x = ball2.x + ball2.vx * dt;  printf ("x2 in if = %d \n", ball2.x);
-                    ball2.y = ball2.y + ball2.vy * dt;  printf ("y2 in if = %d \n", ball2.y);
-                    }
-                }
-                while ((DistanceBalls (ball1.x, ball1.y, ball2.x, ball2.y) == ball1.rBall + ball2.rBall) or (dt < 0.01));
-
-
-            dt = 1; */
-
             Scatter_Balls (&ball1.x, &ball1.y, &ball1.vx, &ball1.vy);
             Scatter_Balls (&ball2.x, &ball2.y, &ball2.vx, &ball2.vy);
 
-            printf ("Kol-vo udarov = %d \n", kolUdarov);
-
-            //ball1.Physics (ax1, ay1, dt);
-            //ball2.Physics (ax2, ay2, dt);
-
-            //ball1.Draw();
-            //ball2.Draw();
+            //printf ("Kol-vo udarov = %d \n", kolUdarov);
 
             ball2.Change();
-            printf ("radius = %d \n", ball2.rBall);
+            //printf ("radius = %d \n", ball2.rBall);
             }
+
+        //Goal (&ball2.x, &ball2.y, &kolGoal);
 
         txSleep (10);
         }
+
+    txDeleteDC (vorota);
+    txDeleteDC (numbers);
     }
 
 //-----------------------------------------------------------------------------
@@ -209,4 +200,15 @@ void Scatter_Balls (int* x, int* y, int* vx, int* vy)
 void Ball::Change ()
     {
     rBall = rBall - 5;
+    }
+
+//-----------------------------------------------------------------------------
+
+void Goal (int* x, int* y, int* kolGoal)
+    {
+    if ((292 <= (*x)) and ((*x) <= 508) and ((*y) < 100))
+        {
+        *kolGoal = (*kolGoal) + 1;
+        }
+    //return kGoal;
     }
