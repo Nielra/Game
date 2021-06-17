@@ -38,13 +38,15 @@ int main()
 
 void MoveBall()
     {
-    HDC vorota   = txLoadImage ("Goal.bmp");
-    HDC numbers  = txLoadImage ("Numbers.bmp");
+    HDC vorota   = txLoadImage ("Images\\Goal.bmp");
+    HDC numbers  = txLoadImage ("Images\\Numbers.bmp");
+    HDC goooal   = txLoadImage ("Images\\Goooal.bmp");
+    HDC gameOver = txLoadImage ("Images\\Game_over.bmp");
 
     Ball ball1 = { .x =  30, .y =  30, .vx = 5, .vy = 3, .rBall = 50,
                    .color = TX_LIGHTRED, .fillcolor = TX_RED};
 
-    Ball ball2 = { .x = 400, .y = 400, .vx = 3, .vy = 5, .rBall = 50,
+    Ball ball2 = { .x = 400, .y = 101, .vx = 3, .vy = 5, .rBall = 50,
                    .color = TX_LIGHTBLUE, .fillcolor = TX_BLUE};
 
     int ax1 = 0, ay1 = 0,
@@ -88,6 +90,13 @@ void MoveBall()
         if (DistanceBalls (ball1.x, ball1.y, ball2.x, ball2.y) <= ball1.rBall + ball2.rBall)
             {
             kolUdarov += 1;
+            if (kolUdarov == 10)
+                {
+                while (!txGetAsyncKeyState ('Y'))
+                    {
+                    txTransparentBlt (txDC(), 0, 75, 0, 0, gameOver, 0, 0);
+                    }
+                }
 
             Scatter_Balls (&ball1.x, &ball1.y, &ball1.vx, &ball1.vy);
             Scatter_Balls (&ball2.x, &ball2.y, &ball2.vx, &ball2.vy);
@@ -99,12 +108,24 @@ void MoveBall()
             }
 
         //Goal (&ball2.x, &ball2.y, &kolGoal);
+        if ((292 <= (ball2.x)) and ((ball2.x) <= 508) and ((ball2.y) < 100))
+            {
+            kolGoal += 1;
+            ball2.x = 400;
+            ball2.y = 300;
+            while (!txGetAsyncKeyState ('Y'))
+                {
+                txTransparentBlt (txDC(), 58, 100, 0, 0, goooal, 0, 0);
+                }
+            }
 
         txSleep (10);
         }
 
     txDeleteDC (vorota);
     txDeleteDC (numbers);
+    txDeleteDC (goooal);
+    txDeleteDC (gameOver);
     }
 
 //-----------------------------------------------------------------------------
