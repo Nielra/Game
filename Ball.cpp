@@ -1,5 +1,4 @@
 #include "TXLib.h"
-//#include "..\proba_lib\Pugovkina_Lib.h"
 
 struct Ball
     {
@@ -18,10 +17,13 @@ struct Ball
     };
 
 void MoveBall();
+void Text();
+
 void ControlBall1  (Ball*);
 void ControlBall2  (int* vx, int* vy);
 void Scatter_Balls (int* x, int* y, int* vx, int* vy);
 void Goal          (int* x, int* y, int* kolGoal);
+void GameOver      (int* kolUdarov);
 
 double DistanceBalls (int xA, int yA, int xB, int yB);
 
@@ -38,10 +40,8 @@ int main()
 
 void MoveBall()
     {
-    HDC vorota   = txLoadImage ("Images\\Goal.bmp");
-    HDC numbers  = txLoadImage ("Images\\Numbers.bmp");
-    HDC goooal   = txLoadImage ("Images\\Goooal.bmp");
-    HDC gameOver = txLoadImage ("Images\\Game_over.bmp");
+    HDC vorota  = txLoadImage ("Images\\Goal.bmp");
+    HDC numbers = txLoadImage ("Images\\Numbers.bmp");
 
     Ball ball1 = { .x =  30, .y =  30, .vx = 5, .vy = 3, .rBall = 50,
                    .color = TX_LIGHTRED, .fillcolor = TX_RED};
@@ -60,7 +60,6 @@ void MoveBall()
 
     while (!txGetAsyncKeyState (VK_ESCAPE))
         {
-        //txSetColor (TX_BLACK);
         txSetFillColor (TX_GREEN);
         txClear();
 
@@ -68,15 +67,11 @@ void MoveBall()
         txSetFillColor(TX_WHITE);
         txRectangle (0, 600, 800, 650);
 
-        txSetColor (TX_GREEN);
-        txSetFillColor (TX_GREEN);
-        txSelectFont ("Arial", 50, 0, FW_BOLD);
-        txTextOut (  0, 600, "Attempts");
-        txTextOut (600, 600, "Goals");
+        Text();
 
         txTransparentBlt (txDC(), 252, 0,    0,  0, vorota,  0,                     0, TX_WHITE);
-        txTransparentBlt (txDC(), 200, 600, 20, 40, numbers, 40 * (10 - kolUdarov), 0, TX_WHITE);
-        txTransparentBlt (txDC(), 730, 600, 20, 40, numbers, 40 * kolGoal,          0, TX_WHITE);
+        txTransparentBlt (txDC(), 200, 605, 20, 40, numbers, 40 * (10 - kolUdarov), 0, TX_WHITE);
+        txTransparentBlt (txDC(), 730, 605, 20, 40, numbers, 40 * kolGoal,          0, TX_WHITE);
 
         ball1.Draw();
         ball2.Draw();
@@ -89,14 +84,7 @@ void MoveBall()
 
         if (DistanceBalls (ball1.x, ball1.y, ball2.x, ball2.y) <= ball1.rBall + ball2.rBall)
             {
-            kolUdarov += 1;
-            if (kolUdarov == 10)
-                {
-                while (!txGetAsyncKeyState ('Y'))
-                    {
-                    txTransparentBlt (txDC(), 0, 75, 0, 0, gameOver, 0, 0);
-                    }
-                }
+            GameOver (&kolUdarov);
 
             Scatter_Balls (&ball1.x, &ball1.y, &ball1.vx, &ball1.vy);
             Scatter_Balls (&ball2.x, &ball2.y, &ball2.vx, &ball2.vy);
@@ -107,16 +95,9 @@ void MoveBall()
             //printf ("radius = %d \n", ball2.rBall);
             }
 
-        //Goal (&ball2.x, &ball2.y, &kolGoal);
         if ((292 <= (ball2.x)) and ((ball2.x) <= 508) and ((ball2.y) < 100))
             {
-            kolGoal += 1;
-            ball2.x = 400;
-            ball2.y = 300;
-            while (!txGetAsyncKeyState ('Y'))
-                {
-                txTransparentBlt (txDC(), 58, 100, 0, 0, goooal, 0, 0);
-                }
+            Goal (&ball2.x, &ball2.y, &kolGoal);
             }
 
         txSleep (10);
@@ -124,8 +105,6 @@ void MoveBall()
 
     txDeleteDC (vorota);
     txDeleteDC (numbers);
-    txDeleteDC (goooal);
-    txDeleteDC (gameOver);
     }
 
 //-----------------------------------------------------------------------------
@@ -227,9 +206,67 @@ void Ball::Change ()
 
 void Goal (int* x, int* y, int* kolGoal)
     {
-    if ((292 <= (*x)) and ((*x) <= 508) and ((*y) < 100))
+    HDC goooal = txLoadImage ("Images\\Goooal.bmp");
+    HDC numbers = txLoadImage ("Images\\Numbers.bmp");
+
+    *kolGoal = (*kolGoal) + 1;
+    *x = 400;
+    *y = 300;
+
+    txTransparentBlt (txDC(), 730, 605, 20, 40, numbers, (*kolGoal) * 40, 0, TX_WHITE);
+    txTransparentBlt (txDC(),  30, 110,  0,  0, goooal,  0,               0);
+
+    txSleep (3000);
+
+    if (*kolGoal == 3)
         {
-        *kolGoal = (*kolGoal) + 1;
+        HDC kubok  = txLoadImage ("Images\\Kubok.bmp");
+
+        txSetFillColor (TX_GREEN);
+        txClear();
+
+        txTransparentBlt (txDC(), 200, 50, 0, 0, kubok, 0, 0);
+
+        txDeleteDC (goooal);
+        txDeleteDC (kubok);
+        txDeleteDC (numbers);
+
+        exit (1);
         }
-    //return kGoal;
+
+    txDeleteDC (goooal);
+    txDeleteDC (numbers);
+    }
+
+//-----------------------------------------------------------------------------
+
+void GameOver (int* kolUdarov)
+    {
+    (*kolUdarov) += 1;
+    if ((*kolUdarov) == 10)
+        {
+        HDC gameOver = txLoadImage ("Images\\Game_over.bmp");
+        HDC numbers  = txLoadImage ("Images\\Numbers.bmp");
+
+        txTransparentBlt (txDC(),   0,  75,  0,  0, gameOver,                     0, 0);
+        txTransparentBlt (txDC(), 200, 605, 20, 40, numbers, 40 * (10 - *kolUdarov), 0, TX_WHITE);
+
+        txDeleteDC (gameOver);
+        txDeleteDC (numbers);
+
+        exit (1);
+        }
+    }
+
+//-----------------------------------------------------------------------------
+
+void Text()
+    {
+    txSetColor (TX_GREEN);
+    txSetFillColor (TX_GREEN);
+    txSelectFont ("Arial", 50, 0, FW_BOLD);
+    txTextOut (  0, 600, "Attempts");
+    txTextOut (600, 600, "Goals");
+    txSelectFont ("Arial", 20, 0, FW_BOLD);
+    txTextOut (260, 620, "Цель: загнать синий шарик в ворота");
     }
