@@ -213,10 +213,14 @@ void Goal (int* x, int* y, int* kolGoal)
     *x = 400;
     *y = 300;
 
+    txPlaySound ("Krik-Goal.wav");
+
     txTransparentBlt (txDC(), 730, 605, 20, 40, numbers, (*kolGoal) * 40, 0, TX_WHITE);
     txTransparentBlt (txDC(),  30, 110,  0,  0, goooal,  0,               0);
 
     txSleep (3000);
+
+    txPlaySound (NULL);
 
     if (*kolGoal == 3)
         {
@@ -248,8 +252,19 @@ void GameOver (int* kolUdarov)
         HDC gameOver = txLoadImage ("Images\\Game_over.bmp");
         HDC numbers  = txLoadImage ("Images\\Numbers.bmp");
 
+        txPlaySound ("Game_over.wav");
+
         txTransparentBlt (txDC(),   0,  75,  0,  0, gameOver,                     0, 0);
         txTransparentBlt (txDC(), 200, 605, 20, 40, numbers, 40 * (10 - *kolUdarov), 0, TX_WHITE);
+
+        txSetColor (TX_RED);
+        txSetFillColor (TX_RED);
+        txSelectFont ("Arial", 50, 0, FW_BOLD);
+        txTextOut (300, 550, "Game over");
+
+        txSleep (3000);
+
+        txPlaySound (NULL);
 
         txDeleteDC (gameOver);
         txDeleteDC (numbers);
@@ -265,7 +280,7 @@ void Text()
     txSetColor (TX_GREEN);
     txSetFillColor (TX_GREEN);
     txSelectFont ("Arial", 50, 0, FW_BOLD);
-    txTextOut (  0, 600, "Attempts");
+    txTextOut (  0, 600, "Attempts");txTextOut (  0, 600, "Attempts");
     txTextOut (600, 600, "Goals");
     txSelectFont ("Arial", 20, 0, FW_BOLD);
     txTextOut (260, 620, "Цель: загнать синий шарик в ворота");
