@@ -213,7 +213,7 @@ void Goal (int* x, int* y, int* kolGoal)
     *x = 400;
     *y = 300;
 
-    txPlaySound ("Krik-Goal.wav");
+    txPlaySound ("Sounds\\Krik-Goal.wav");
 
     txTransparentBlt (txDC(), 730, 605, 20, 40, numbers, (*kolGoal) * 40, 0, TX_WHITE);
     txTransparentBlt (txDC(),  30, 110,  0,  0, goooal,  0,               0);
@@ -252,7 +252,7 @@ void GameOver (int* kolUdarov)
         HDC gameOver = txLoadImage ("Images\\Game_over.bmp");
         HDC numbers  = txLoadImage ("Images\\Numbers.bmp");
 
-        txPlaySound ("Game_over.wav");
+        txPlaySound ("Sounds\\Game_over.wav");
 
         txTransparentBlt (txDC(),   0,  75,  0,  0, gameOver,                     0, 0);
         txTransparentBlt (txDC(), 200, 605, 20, 40, numbers, 40 * (10 - *kolUdarov), 0, TX_WHITE);
