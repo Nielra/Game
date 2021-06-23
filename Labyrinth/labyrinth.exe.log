@@ -1,0 +1,198 @@
+
+--------------------------------------------------
+TXLib сообщает:
+
+Программа: C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe, файл: C:\Курсы МФТИ TXLib\TX\TXLib.h, строка: 13628, функция: bool {anonymous}::TX::txBitBlt(HDC, double, double, double, double, HDC, double, double, unsigned int),
+
+Сообщение: Параметр "sourceImage" неверен. Возможно, этот холст не создан, или уже уничтожен, или не загрузилась картинка.
+
+#1: TXLib [Ver: 00173a, Rev: 171, Date: 2021-06-16 02:02:25 +0400], Instance: 0x00507304 (32-bit), Flags: CMdRe0, Thread: 0x1AFC (Main), GetLastError(): 13 (Недопустимые данные). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x00423045 in C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe: txBitBlt() at C:/Курсы МФТИ TXLib/TX/TXLib.h (13628)
+
+# 1 0x0042CD2F in C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe: MoveCar() at C:/Users/User/Documents/GitHub/Labyrinth/labyrinth.cpp (66):
+
+     64:         //Text();
+     65: 
+=>   66:         txBitBlt (txDC(), 0, 0, 0, 0, fon, 0, 0);
+     67:         //txTransparentBlt (txDC(), 200, 605, 20, 40, numbers, 40 * (10 - kolUdarov), 0, TX_WHITE);
+     68:         //txTransparentBlt (txDC(), 730, 605, 20, 40, numbers, 40 * kolGoal,          0, TX_WHITE);
+
+# 2 0x0042CB7F in C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe: main() at C:/Users/User/Documents/GitHub/Labyrinth/labyrinth.cpp (32):
+
+     30:     txCreateWindow (800, 700);
+     31: 
+=>   32:     MoveCar();
+     33: 
+     34:     return 0;
+
+--------------------------------------------------
+Стек вызовов TX:
+
+# 0 in bool {anonymous}::TX::txBitBlt(HDC, double, double, double, double, HDC, double, double, unsigned int) at C:\Курсы МФТИ TXLib\TX\TXLib.h (13628):
+
+  13626:     {
+  13627: $1  if (_TX_HDC_FAILED (destImage))   return false;
+=>13628: $   if (_TX_HDC_FAILED (sourceImage)) return false;
+  13629: 
+  13630: $   POINT size = txGetExtent (sourceImage);
+
+# 1 in void MoveCar() at C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.cpp (66):
+
+     64:         //Text();
+     65: 
+=>   66:         txBitBlt (txDC(), 0, 0, 0, 0, fon, 0, 0);
+     67:         //txTransparentBlt (txDC(), 200, 605, 20, 40, numbers, 40 * (10 - kolUdarov), 0, TX_WHITE);
+     68:         //txTransparentBlt (txDC(), 730, 605, 20, 40, numbers, 40 * kolGoal,          0, TX_WHITE);
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 171, Date: 2021-06-16 02:02:25 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	C:\Курсы МФТИ TXLib\TX\TXLib.h
+Compiled:	Jun 23 2021 18:01:38, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Jun 23 2021 18:01:44
+
+Run file:	C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe
+Directory:	C:\Users\User\Documents\GitHub\Labyrinth
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib сообщает:
+
+Программа: C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe, файл: C:\Курсы МФТИ TXLib\TX\TXLib.h, строка: 13628, функция: bool {anonymous}::TX::txBitBlt(HDC, double, double, double, double, HDC, double, double, unsigned int),
+
+Сообщение: Параметр "sourceImage" неверен. Возможно, этот холст не создан, или уже уничтожен, или не загрузилась картинка.
+
+#1: TXLib [Ver: 00173a, Rev: 171, Date: 2021-06-16 02:02:25 +0400], Instance: 0x00506304 (32-bit), Flags: CMdRe0, Thread: 0x9D4 (Main), GetLastError(): 13 (Недопустимые данные). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x00423045 in C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe: txBitBlt() at C:/Курсы МФТИ TXLib/TX/TXLib.h (13628)
+
+# 1 0x0042CD21 in C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe: MoveCar() at C:/Users/User/Documents/GitHub/Labyrinth/labyrinth.cpp (58):
+
+     56:         //Text();
+     57: 
+=>   58:         txBitBlt (txDC(), 0, 0, 0, 0, fon, 0, 0);
+     59:         //txTransparentBlt (txDC(), 200, 605, 20, 40, numbers, 40 * (10 - kolUdarov), 0, TX_WHITE);
+     60:         //txTransparentBlt (txDC(), 730, 605, 20, 40, numbers, 40 * kolGoal,          0, TX_WHITE);
+
+# 2 0x0042CB7F in C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe: main() at C:/Users/User/Documents/GitHub/Labyrinth/labyrinth.cpp (28):
+
+     26:     txCreateWindow (800, 700);
+     27: 
+=>   28:     MoveCar();
+     29: 
+     30:     return 0;
+
+--------------------------------------------------
+Стек вызовов TX:
+
+# 0 in bool {anonymous}::TX::txBitBlt(HDC, double, double, double, double, HDC, double, double, unsigned int) at C:\Курсы МФТИ TXLib\TX\TXLib.h (13628):
+
+  13626:     {
+  13627: $1  if (_TX_HDC_FAILED (destImage))   return false;
+=>13628: $   if (_TX_HDC_FAILED (sourceImage)) return false;
+  13629: 
+  13630: $   POINT size = txGetExtent (sourceImage);
+
+# 1 in void MoveCar() at C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.cpp (58):
+
+     56:         //Text();
+     57: 
+=>   58:         txBitBlt (txDC(), 0, 0, 0, 0, fon, 0, 0);
+     59:         //txTransparentBlt (txDC(), 200, 605, 20, 40, numbers, 40 * (10 - kolUdarov), 0, TX_WHITE);
+     60:         //txTransparentBlt (txDC(), 730, 605, 20, 40, numbers, 40 * kolGoal,          0, TX_WHITE);
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 171, Date: 2021-06-16 02:02:25 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	C:\Курсы МФТИ TXLib\TX\TXLib.h
+Compiled:	Jun 23 2021 18:05:16, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Jun 23 2021 18:05:22
+
+Run file:	C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe
+Directory:	C:\Users\User\Documents\GitHub\Labyrinth
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib сообщает:
+
+Программа: C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe, файл: C:\Курсы МФТИ TXLib\TX\TXLib.h, строка: 13657, функция: bool {anonymous}::TX::txTransparentBlt(HDC, double, double, double, double, HDC, double, double, COLORREF),
+
+Сообщение: Параметр "sourceImage" неверен. Возможно, этот холст не создан, или уже уничтожен, или не загрузилась картинка.
+
+#1: TXLib [Ver: 00173a, Rev: 171, Date: 2021-06-16 02:02:25 +0400], Instance: 0x00506304 (32-bit), Flags: CMdRe0, Thread: 0x1AF0 (Main), GetLastError(): 13 (Недопустимые данные). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x00423572 in C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe: txTransparentBlt() at C:/Курсы МФТИ TXLib/TX/TXLib.h (13657)
+
+# 1 0x0042CD21 in C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe: MoveCar() at C:/Users/User/Documents/GitHub/Labyrinth/labyrinth.cpp (56):
+
+     54:         //txRectangle (0, 600, 800, 650);
+     55: 
+=>   56:         txTransparentBlt (txDC(), 0, 0, 0, 0, fon, 0, 0);
+     57:         //txTransparentBlt (txDC(), 200, 605, 20, 40, numbers, 40 * (10 - kolUdarov), 0, TX_WHITE);
+     58:         //txTransparentBlt (txDC(), 730, 605, 20, 40, numbers, 40 * kolGoal,          0, TX_WHITE);
+
+# 2 0x0042CB7F in C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe: main() at C:/Users/User/Documents/GitHub/Labyrinth/labyrinth.cpp (28):
+
+     26:     txCreateWindow (800, 700);
+     27: 
+=>   28:     MoveCar();
+     29: 
+     30:     return 0;
+
+--------------------------------------------------
+Стек вызовов TX:
+
+# 0 in bool {anonymous}::TX::txTransparentBlt(HDC, double, double, double, double, HDC, double, double, COLORREF) at C:\Курсы МФТИ TXLib\TX\TXLib.h (13657):
+
+  13655: 
+  13656: $1  if (_TX_HDC_FAILED (destImage))   return false;
+=>13657: $   if (_TX_HDC_FAILED (sourceImage)) return false;
+  13658: 
+  13659:     // Это автоматическое определение размеров картинки (точнее, HDC источника - source) с помощью txGetExtent().
+
+# 1 in void MoveCar() at C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.cpp (56):
+
+     54:         //txRectangle (0, 600, 800, 650);
+     55: 
+=>   56:         txTransparentBlt (txDC(), 0, 0, 0, 0, fon, 0, 0);
+     57:         //txTransparentBlt (txDC(), 200, 605, 20, 40, numbers, 40 * (10 - kolUdarov), 0, TX_WHITE);
+     58:         //txTransparentBlt (txDC(), 730, 605, 20, 40, numbers, 40 * kolGoal,          0, TX_WHITE);
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 171, Date: 2021-06-16 02:02:25 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	C:\Курсы МФТИ TXLib\TX\TXLib.h
+Compiled:	Jun 23 2021 18:06:14, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Jun 23 2021 18:06:20
+
+Run file:	C:\Users\User\Documents\GitHub\Labyrinth\labyrinth.exe
+Directory:	C:\Users\User\Documents\GitHub\Labyrinth
+
+--------------------------------------------------
