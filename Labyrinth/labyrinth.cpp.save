@@ -71,7 +71,12 @@ void MoveCar()
 
         else if (color != RGB (0, 0, 255)) car = oldPoz;
 
-        if (color == RGB (255, 0, 0)) GameOver();
+        if (color == RGB (255, 0, 0))
+            {
+            GameOver();
+            
+            break;
+            }
 
         if (txGetAsyncKeyState (VK_F5)) txBitBlt (txDC(), 0, 0, 0, 0, fon, 0, 0);
 
@@ -139,23 +144,13 @@ void ControlBall (Ball* ball)
 
 //-----------------------------------------------------------------------------
 
-void Ball::Change ()
+/*void Ball::Change ()
     {
-    /*if (x < 117) x = 175;
+    if (x < 117) x = 175;
     else if (x < 320) y = 362;
          else if ((x > 420) && (y < 80)) x = 345;
-              else if (x > 570) {x = 485; y = 210;}*/
-              
-    if (x < 117) (ball -> x) = 175;
-        else if (x < 320) (ball -> y) = 362;
-             else if ((x > 420) && (y < 80)) (ball -> x) = 345;
-                  else if (x > 570)
-                           {
-                           (ball -> x) = 485;
-                           (ball -> y) = 210;
-                           }
-
-    }
+              else if (x > 570) {x = 485; y = 210;}
+    } */
 
 //-----------------------------------------------------------------------------
 
@@ -181,15 +176,16 @@ void SecretZona (Ball* ball)
 
     if (atoi (question) == chislo1 + chislo2)
         {
-        
-        /*if ((ball -> x) < 117) (ball -> x) = 175;
+        //car.Gange();
+
+        if ((ball -> x) < 117) (ball -> x) = 175;
         else if ((ball -> x) < 320) (ball -> y) = 362;
              else if (((ball -> x) > 420) && ((ball -> y) < 80)) (ball -> x) = 345;
                   else if ((ball -> x) > 570)
                            {
                            (ball -> x) = 485;
                            (ball -> y) = 210;
-                           }  */
+                           }
         }
     else
         {
@@ -204,6 +200,4 @@ void GameOver()
     {
     txPlaySound  ("Sounds\\Pobeda.wav");
     txMessageBox ("Ты молодец!!!", "Победа", MB_OK);
-
-    exit (1);
     }

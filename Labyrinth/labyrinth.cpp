@@ -71,9 +71,14 @@ void MoveCar()
 
         else if (color != RGB (0, 0, 255)) car = oldPoz;
 
-        if (color == RGB (255, 0, 0)) GameOver();
+        if (color == RGB (255, 0, 0))
+            {
+            GameOver();
 
-        if (txGetAsyncKeyState (VK_F5)) txBitBlt (txDC(), 0, 0, 0, 0, fon, 0, 0);
+            break;
+            }
+
+        if (txGetAsyncKeyState (VK_F5)) txBitBlt (txDC(), 0, 0, 0, 0, map, 0, 0);
 
         txSleep (10);
         }
@@ -195,6 +200,4 @@ void GameOver()
     {
     txPlaySound  ("Sounds\\Pobeda.wav");
     txMessageBox ("Ты молодец!!!", "Победа", MB_OK);
-
-    exit (1);
     }
